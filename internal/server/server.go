@@ -13,7 +13,8 @@ type Server struct {
 	srv *restapi.Server
 	log *log.Entry
 
-	Users rms_users.RmsUsersService
+	Users    rms_users.RmsUsersService
+	Notifier Notifier
 }
 
 func (s *Server) ListenAndServer(host string, port int) error {

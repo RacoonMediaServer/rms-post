@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/RacoonMediaServer/rms-packages/pkg/service/servicemgr"
 	"github.com/RacoonMediaServer/rms-post/internal/config"
+	"github.com/RacoonMediaServer/rms-post/internal/notifier"
 	"github.com/RacoonMediaServer/rms-post/internal/server"
 	"github.com/apex/log"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -52,6 +53,7 @@ func main() {
 
 	srv := server.Server{}
 	srv.Users = servicemgr.NewServiceFactory(service).NewUsers()
+	srv.Notifier = notifier.New(cfg.Delivery)
 
 	go func() {
 		http.Handle("/metrics", promhttp.Handler())
