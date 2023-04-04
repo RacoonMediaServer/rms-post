@@ -1,0 +1,93 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Post API
+  description: Post API for Racoon Media Server Project
+host: 136.244.108.126
+consumes:
+  - multipart/form-data
+
+securityDefinitions:
+  key:
+    type: apiKey
+    in: header
+    name: x-token
+
+tags:
+  - name: notify
+    description: Рассылка уведомлений
+
+paths:
+  /notify/sms:
+    post:
+      tags:
+        - notify
+      summary: Отправить уведомление по SMS
+      operationId: notifySMS
+      parameters:
+        - name: text
+          in: formData
+          required: true
+          description: Текст сообщения
+          type: string
+          minLength: 2
+          maxLength: 60
+        - name: to
+          in: formData
+          required: true
+          description: Телефон получателя
+          type: string
+          maxLength: 12
+
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Ошибка во входных параметрах
+        '500':
+          description: Ошибка на стороне сервера
+      security:
+        - key: [ ]
+
+  /notify/email:
+    post:
+      tags:
+        - notify
+      summary: Отправить E-Mail
+      operationId: notifyEmail
+      parameters:
+        - name: to
+          in: formData
+          required: true
+          description: Адрес получателя
+          type: string
+        - name: subject
+          in: formData
+          required: true
+          type: string
+          description: Тема сообщения
+        - name: text
+          in: formData
+          type: file
+          required: true
+        - name: attachment
+          in: formData
+          type: file
+          required: false
+
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Ошибка во входных параметрах
+        '500':
+          description: Ошибка на стороне сервера
+      security:
+        - key: [ ]
+
+definitions:
+  principal:
+    type: object
+    properties:
+      token:
+        type: string
