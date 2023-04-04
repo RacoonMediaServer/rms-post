@@ -6,5 +6,19 @@
   "monitor": {
     "host": "localhost",
     "port": 2112
+  },
+  "delivery": {
+    "sms": {
+      "account": "",
+      "key": ""
+    },
+    "email": {
+      "user": "",
+      "password": "",
+      "smtp": {
+        "host": "smtp.yandex.ru",
+        "port": 465
+      }
+    }
   }
 }
