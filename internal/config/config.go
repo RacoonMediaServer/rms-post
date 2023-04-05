@@ -8,7 +8,7 @@ type Delivery struct {
 		Account string
 		Key     string
 	}
-	Smtp struct {
+	Email struct {
 		Host     string
 		Port     int
 		User     string

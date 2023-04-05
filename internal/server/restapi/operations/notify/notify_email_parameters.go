@@ -54,7 +54,7 @@ type NotifyEmailParams struct {
 	  Required: true
 	  In: formData
 	*/
-	Text io.ReadCloser
+	Text string
 	/*Адрес получателя
 	  Required: true
 	  In: formData
@@ -96,14 +96,9 @@ func (o *NotifyEmailParams) BindRequest(r *http.Request, route *middleware.Match
 		res = append(res, err)
 	}
 
-	text, textHeader, err := r.FormFile("text")
-	if err != nil {
-		res = append(res, errors.New(400, "reading file %q failed: %v", "text", err))
-	} else if err := o.bindText(text, textHeader); err != nil {
-		// Required: true
+	fdText, fdhkText, _ := fds.GetOK("text")
+	if err := o.bindText(fdText, fdhkText, route.Formats); err != nil {
 		res = append(res, err)
-	} else {
-		o.Text = &runtime.File{Data: text, Header: textHeader}
 	}
 
 	fdTo, fdhkTo, _ := fds.GetOK("to")
@@ -143,10 +138,23 @@ func (o *NotifyEmailParams) bindSubject(rawData []string, hasKey bool, formats s
 	return nil
 }
 
-// bindText binds file parameter Text.
-//
-// The only supported validations on files are MinLength and MaxLength
-func (o *NotifyEmailParams) bindText(file multipart.File, header *multipart.FileHeader) error {
+// bindText binds and validates parameter Text from formData.
+func (o *NotifyEmailParams) bindText(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	if !hasKey {
+		return errors.Required("text", "formData", rawData)
+	}
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: true
+
+	if err := validate.RequiredString("text", "formData", raw); err != nil {
+		return err
+	}
+	o.Text = raw
+
 	return nil
 }
 

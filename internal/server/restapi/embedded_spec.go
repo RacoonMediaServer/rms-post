@@ -57,7 +57,7 @@ func init() {
             "required": true
           },
           {
-            "type": "file",
+            "type": "string",
             "name": "text",
             "in": "formData",
             "required": true
@@ -190,7 +190,7 @@ func init() {
             "required": true
           },
           {
-            "type": "file",
+            "type": "string",
             "name": "text",
             "in": "formData",
             "required": true

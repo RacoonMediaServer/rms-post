@@ -15,10 +15,8 @@
     "email": {
       "user": "",
       "password": "",
-      "smtp": {
-        "host": "smtp.yandex.ru",
-        "port": 465
-      }
+      "host": "smtp.yandex.ru",
+      "port": 465
     }
   }
 }
