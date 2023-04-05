@@ -71,7 +71,7 @@ type NotifyEmailParams struct {
 	Subject string
 
 	// Text.
-	Text runtime.NamedReadCloser
+	Text string
 
 	/* To.
 
@@ -155,13 +155,13 @@ func (o *NotifyEmailParams) SetSubject(subject string) {
 }
 
 // WithText adds the text to the notify email params
-func (o *NotifyEmailParams) WithText(text runtime.NamedReadCloser) *NotifyEmailParams {
+func (o *NotifyEmailParams) WithText(text string) *NotifyEmailParams {
 	o.SetText(text)
 	return o
 }
 
 // SetText adds the text to the notify email params
-func (o *NotifyEmailParams) SetText(text runtime.NamedReadCloser) {
+func (o *NotifyEmailParams) SetText(text string) {
 	o.Text = text
 }
 
@@ -202,9 +202,14 @@ func (o *NotifyEmailParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.R
 			return err
 		}
 	}
-	// form file param text
-	if err := r.SetFileParam("text", o.Text); err != nil {
-		return err
+
+	// form param text
+	frText := o.Text
+	fText := frText
+	if fText != "" {
+		if err := r.SetFormParam("text", fText); err != nil {
+			return err
+		}
 	}
 
 	// form param to
