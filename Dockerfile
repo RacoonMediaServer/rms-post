@@ -1,7 +1,7 @@
 FROM golang as builder
 WORKDIR /src/rms-post
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build  -ldflags "-X main.Version=`git tag --sort=-version:refname | head -n 1`" -o rms-media-discovery -a -installsuffix cgo rms-post.go
+RUN CGO_ENABLED=0 GOOS=linux go build  -ldflags "-X main.Version=`git tag --sort=-version:refname | head -n 1`" -o rms-post -a -installsuffix cgo rms-post.go
 
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates tzdata
