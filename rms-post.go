@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/RacoonMediaServer/rms-packages/pkg/service/servicemgr"
 	"github.com/RacoonMediaServer/rms-post/internal/config"
 	"github.com/RacoonMediaServer/rms-post/internal/notifier"
@@ -10,7 +12,9 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/urfave/cli/v2"
 	"go-micro.dev/v4"
-	"net/http"
+
+	// Plugins
+	_ "github.com/go-micro/plugins/v4/registry/etcd"
 )
 
 var Version = "0.0.0"
