@@ -3,7 +3,7 @@ module github.com/RacoonMediaServer/rms-post
 go 1.20
 
 require (
-	github.com/RacoonMediaServer/rms-packages v1.8.7
+	github.com/RacoonMediaServer/rms-packages v1.14.7
 	github.com/apex/log v1.9.0
 	github.com/go-micro/plugins/v4/registry/etcd v1.2.0
 	github.com/go-openapi/errors v0.20.3

@@ -2,14 +2,15 @@ package server
 
 import (
 	"context"
+	"io"
+	"net/http"
+
 	rms_users "github.com/RacoonMediaServer/rms-packages/pkg/service/rms-users"
 	"github.com/RacoonMediaServer/rms-post/internal/server/models"
 	"github.com/RacoonMediaServer/rms-post/internal/server/restapi/operations"
 	"github.com/RacoonMediaServer/rms-post/internal/server/restapi/operations/notify"
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime/middleware"
-	"io"
-	"net/http"
 )
 
 type Notifier interface {
@@ -59,22 +60,18 @@ func (s *Server) configureAPI(api *operations.ServerAPI) {
 	api.NotifyNotifyEmailHandler = notify.NotifyEmailHandlerFunc(s.sendEmail)
 
 	api.KeyAuth = func(token string) (*models.Principal, error) {
-		resp, err := s.Users.GetPermissions(context.Background(), &rms_users.GetPermissionsRequest{Token: token})
+		req := rms_users.CheckPermissionsRequest{
+			Token: token,
+			Perms: []rms_users.Permissions{rms_users.Permissions_SendNotifications},
+		}
+		resp, err := s.Users.CheckPermissions(context.Background(), &req)
 		if err != nil {
 			s.log.Errorf("Cannot retrieve permissions: %s", err)
 			return nil, errors.New(http.StatusForbidden, "Forbidden")
 		}
-		notifyAllowed := false
-		for _, p := range resp.Perms {
-			// отдельных прав не делал на уведомления, но нужно
-			if p == rms_users.Permissions_SendNotifications {
-				notifyAllowed = true
-				break
-			}
-		}
-		if !notifyAllowed {
+		if !resp.Allowed {
 			return nil, errors.New(http.StatusForbidden, "Forbidden")
 		}
-		return &models.Principal{Token: token}, nil
+		return &models.Principal{Token: resp.UserId}, nil
 	}
 }
